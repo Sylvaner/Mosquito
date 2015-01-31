@@ -1,0 +1,354 @@
+html
+{
+    min-width: 1024px;
+    font-family: sans-serif;
+}
+
+#header .title
+{
+  display: block;
+  float: left;
+  color: #FFFFFF;
+  text-decoration: none;
+  margin-left: 1em;
+  font-weight: bold;
+  height: 3em;
+  line-height: 3em;
+}
+
+#search
+{
+    display: inline-block;
+    margin-right: 1em;
+    height: 2em;
+    margin-top: 0.5em;
+    float: right;
+}
+
+#search-input
+{
+    display: block;
+    float: left;
+    border: none;
+    outline: none;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-width: 0;
+    height: 2.25em;
+    -webkit-border-top-left-radius: 0.4em;
+    -webkit-border-bottom-left-radius: 0.4em;
+    -moz-border-radius-topleft: 0.4em;
+    -moz-border-radius-bottomleft: 0.4em;
+    border-top-left-radius: 0.4em;
+    border-bottom-left-radius: 0.4em;
+}
+
+#search-button
+{
+    display: table-cell;
+    float: left;
+    border: none;
+    background-color: #FF8237;
+    width: 2em;
+    height: 2em;
+    cursor: pointer;
+    -webkit-border-top-right-radius: 0.4em;
+    -webkit-border-bottom-right-radius: 0.4em;
+    -moz-border-radius-topright: 0.4em;
+    -moz-border-radius-bottomright: 0.4em;
+    border-top-right-radius: 0.4em;
+    border-bottom-right-radius: 0.4em;
+}
+
+#search-button img
+{
+    display: block;
+    margin: auto;
+    margin-top: 0.25em;
+    height: 1.5em;
+    width: 1.5em;
+}
+
+#loading-indicator
+{
+    display: none;
+}
+
+.header-button
+{
+    display: inline-block;
+    float: right;
+    cursor: pointer;
+    margin-top: 0.5em;
+    margin-right: 1em;
+    height: 2em;
+    width: 2em;
+}
+
+.header-button img
+{
+    width: 2em;
+    height: 2em;
+}
+
+#menu-loading-indicator
+{
+    display: none;
+}
+
+#menu-loading-indicator, .menu-loading-indicator img
+{
+	height: 2em;
+	width: 2em;
+}
+
+#left-pane
+{
+    cursor: pointer;
+    white-space: nowrap;
+    border-right: 1px solid #222222;
+}
+
+#left-pane > ul
+{
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin: 1em;
+}
+
+#left-pane li
+{
+    margin-top: 0.8em;
+    padding-top: 0.1em;
+    padding-right: 0;
+    padding-bottom: 0.1em;
+    padding-left: 0.4em;
+}
+
+#left-pane .close
+{
+    padding-left: 1.4em!important;
+    background: url('/images/default/menu_plus.png') no-repeat left top;
+}
+
+#left-pane .open
+{
+    padding-left: 1.4em!important;
+    background: url('/images/default/menu_minus.png') no-repeat left top;
+}
+
+#right-pane
+{
+    border-left: 1px solid #222222;
+}
+
+#file-list
+{
+    white-space: nowrap;
+    overflow: auto;
+}
+
+#file-list tr
+{
+    height: 1.2em;
+    cursor: pointer;
+}
+
+#file-list td
+{
+    text-align: left;
+}
+
+#file-list .right
+{
+    text-align: right;
+}
+
+#file-list td
+{
+    padding-left: 1em;
+    padding-right: 1em;
+    vertical-align: middle;
+}
+
+#content
+{
+    border-left: 1px solid #222222;
+}
+
+#content .odd
+{
+    background-color: #EBEBEB;
+}
+
+#content .ui-selecting
+{
+  background-color: #ffb284;
+}
+
+#content .ui-selected, .selected-file
+{
+  background-color: #ffa26a;
+}
+
+#player-list
+{
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#header, 
+#player,
+#command-pane
+{
+  background-color: #2D2D2D;
+}
+
+#command-pane
+{
+	height: 2.5em;
+	width: 100%;
+}
+
+.command-button
+{
+    height: 2.5em;
+    margin-top: 0.25em;
+}
+
+.command-button img
+{
+    vertical-align: middle;
+    height: 2em;
+    width: 2em;
+    padding-right: 0.5em;
+}
+
+#command-pane-left a
+{
+    display: inline-block;
+    text-align: center;
+    width: 33%;
+}
+
+#command-pane-center a
+{
+    display: block;
+    width: 14em;
+    line-height: 2em;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    float: right;
+    margin-left: 1em;
+}
+
+#command-pane-right a
+{
+    display: block;
+    width: 2.5em;
+    float: right;
+    margin-right: 1em;
+}
+
+#player
+{
+    text-align: center;
+    width: 100%;
+}
+
+#player-command
+{
+  position: absolute;
+  width: 100%;
+  display: block;
+  margin-top: 0.5em;
+}
+
+#player-command div
+{
+  display: inline-block;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+#player-command img
+{
+  height: 4em;
+  width: 4em;
+}
+
+#player-info
+{
+    position: absolute;
+    right: 1.5em;
+    bottom: 0.5em;
+    height: 4em;
+    width: 20em;
+    background-color: #999999;
+    -webkit-border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+}
+
+#player-info-name
+{
+    margin: 0.5em;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#player-options
+{
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.5em;
+}
+
+#player-options>div
+{
+    float: left;
+    margin-left: 0.5em;
+}
+
+#player-options>div, #player-options img
+{
+    height: 1.5em;
+    width: 1.5em;
+    cursor: pointer;
+}
+
+.dialog
+{
+    width: 30em;
+}
+.dialog input[type="text"], .dialog .text-label
+{
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+
+.inline-label
+{
+    display: inline!important;
+}
+
+.loading-indicator
+{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.loading-indicator img
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -1.5em 0 0 -1.5em;
+    height: 3em;
+    width: 3em;
+}

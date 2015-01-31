@@ -1,0 +1,15 @@
+{
+	"addSelected": "Ajouter la sélection",
+	"addAll": "Tout ajouter",
+	"settings": "Preferences",
+	"libraryPath": "Repertoire de la bibliotheque : ",
+	"languages": "Langue : ",
+	"debug": "Debug : ",
+	"update": "Lancer une mise à jour",
+	"save": "Sauvegarder",
+	"launch": "Lancer",
+	"cancel": "Annuler",
+	"deleteOldFiles": "Supprimer les anciens fichiers : ",
+	"unknow": "Inconnu",
+	"filesCount": "%d fichiers audio"
+}

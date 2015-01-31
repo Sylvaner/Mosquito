@@ -1,0 +1,83 @@
+doctype html
+html(lang="fr")
+ head
+   title Mosquito Media Player
+   meta(name='viewport', content='width=device-width, initial-scale=1')
+   meta(charset='utf8')
+   for cssFile in cssArray
+     link(rel='stylesheet', href='css/'+cssFile+'.css', type='text/css')
+ body
+  div(class='disableTextSelect')#global
+   div#header
+    a(href='/', class='title') Mosquito
+    a(class='header-button')#settings
+     img(src='/images/default/settings.png')
+    div#search
+     input(type='text')#search-input
+     a#search-button
+      img(src='/images/default/search.png')
+    div(class='header-button')#menu-loading-indicator
+     img(src='/images/default/loading_indicator.gif')
+   div#left-pane
+   div#content
+    table#file-list
+   div#right-pane
+    select(multiple='multiple')#player-list
+   div#footer
+    div#command-pane
+     div#command-pane-left
+      a(href='#', class='command-button')#by-genre
+       img(src='/images/default/by_genre.png')
+      a(href='#', class='command-button')#by-artist
+       img(src='/images/default/by_artist.png')
+      a(href='#', class='command-button')#by-year
+       img(src='/images/default/by_year.png')
+     div#command-pane-center
+      a(href='#', class='command-button')#add-all
+       img(src='/images/default/add_all.png')
+       = __('addAll')
+      a(href='#', class='command-button')#add-selected 
+       img(src='/images/default/add_selected.png')
+       = __('addSelected')
+     div#command-pane-right
+      a(href='#', class='command-button')#delete-all
+       img(src='/images/default/delete_all.png')
+      a(href='#', class='command-button')#delete-selected
+       img(src='/images/default/delete_selected.png')
+    div#player
+     audio#audio
+     div#player-command
+      div#previous-button
+       img(src='/images/default/previous.png')
+      div#play-button
+       img(src='/images/default/play.png')
+      div#next-button
+       img(src='/images/default/next.png')
+     div#player-info
+      p#player-info-name
+      div#player-options
+       div#player-option-repeat
+        img(src='/images/default/repeat_off.png')
+       div#player-option-shuffle
+        img(src='/images/default/shuffle_off.png')
+  div(title=__('settings'), class='dialog')#dialog-settings
+   form
+    fieldset
+     label(for='settings-path', class='text-label')= __('libraryPath')
+     input(type='text')#settings-path
+     label(for='settings-debug', class='check-label')= __('debug')
+     input(type='checkbox')#settings-debug
+  div(title=__('update'), class='dialog')#dialog-settings-update
+   form
+    fieldset
+     label(for='deleteOldFiles', class='check-label')= __('deleteOldFiles')
+     input(type='checkbox')#settings-deleteoldfiles
+  script(type='text/javascript').
+   var theme = '#{theme}';
+   var appDebug = #{appDebug};
+   var locale = !{locale};
+  for jsFile in jsArray
+   if jsFile[0] == '/'
+    script(type='text/javascript', src=jsFile)
+   else
+    script(type='text/javascript', src='js/'+jsFile+'.js')

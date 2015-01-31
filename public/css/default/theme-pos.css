@@ -1,0 +1,110 @@
+html, body
+{
+  width: 100%;
+  height: 100%;
+}
+
+#global
+{
+  min-height: 100%;
+  position: relative;
+}
+
+#header
+{
+  display: block;
+  height: 3em;
+  width: 100%;
+}
+
+#left-pane
+{
+  position: absolute;
+  height: auto;
+  width: 18em;
+  top: 3em;
+  bottom: 7.5em;
+  left: 0;
+  overflow: auto;
+}
+
+#content
+{
+  position: absolute;
+  height: auto;
+  width: auto;
+  top: 3em;
+  bottom: 7.5em;
+  left: 18em;
+  right: 15em;
+  overflow: auto;
+}
+
+#right-pane
+{
+  position: absolute;
+  height: auto;
+  width: 15em;
+  top: 3em;
+  bottom: 7.5em;
+  right: 0;
+  overflow: auto;
+}
+
+#footer
+{
+  display: block;
+  position: absolute;
+  height: 7.5em;
+  width: 100%;
+  bottom: 0;
+}
+
+#command-pane
+{
+  display: block;
+  position: absolute;
+  top: 0;
+  height: 2.5em;
+  width: 100%;
+}
+
+#command-pane-left
+{
+  position: absolute;
+  display: block;
+  height: 0;
+  left: 0;
+  height: 2.5em;
+  width: 18em;
+}
+
+#command-pane-center
+{
+  position: absolute;
+  display: block;
+  height: 0;
+  left: 18em;
+  right: 15em;
+  height: 2.5em;
+  width: auto;
+}
+
+#command-pane-right
+{
+  position: absolute;
+  display: block;
+  height: 0;
+  right: 0;
+  height: 2.5em;
+  width: 15em;
+}
+
+#player
+{
+  display: block;
+  position: absolute;
+  bottom: 0;
+  height: 5em;
+  width: 100%;
+}
