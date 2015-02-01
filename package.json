@@ -22,6 +22,10 @@
     "clean_install": "./dev/clean_install.sh",
     "gendoc": "mkdir documentation && ./dev/gendoc.sh"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Sylvaner/Mosquito.git"
+  },
   "author": "Sylvain DANGIN",
   "license": "GPL"
 }

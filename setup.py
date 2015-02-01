@@ -180,10 +180,11 @@ def installScript():
 	os.system("pip3 install mutagen")
 	print("\n=== Install NodeJs module ===")
 	os.system("npm install --no-bin-links")
+	os.system('mkdir config')
 	configScript()
 	# Change config file owner
-	os.system('chown $SUDO_USER config/config.json')
-	os.system('chgrp $SUDO_USER config/config.json')
+	os.system('chown $SUDO_USER -R config')
+	os.system('chgrp $SUDO_USER -R config')
 	os.chmod("config/config.json", 0o666)
 	
 	if askYorN('Start automatically on boot', 'y'):
