@@ -299,7 +299,7 @@ function getFileList(order, level, choices, callback) {
         choices = parseChoices(choices);
         select = "SELECT id, track, title, artist, album, year, path FROM audio_file "
         where = "";
-        orderBy = " ORDER BY artist, album, track LIMIT " + fileRowsLimit;
+        orderBy = " ORDER BY album, track, artist LIMIT " + fileRowsLimit;
         if (level > 0) {
             if (order == ORDER_BY_GENRE) {
                 if (level >= 1)
@@ -352,7 +352,7 @@ function getSearchFileList(search, callback) {
         var search = exports.escapeStr(search);
         select = "SELECT id, track, title, artist, album, year, path FROM audio_file "
         where = "WHERE artist LIKE '%" + search + "%' OR title LIKE '%" + search + "%' OR album LIKE '%" + search + "%'";
-        orderBy = " ORDER BY artist, album, track LIMIT 40";
+        orderBy = " ORDER BY album, track, artist LIMIT "+fileRowsLimit;
         var query = select + where + orderBy;
 
         connection.query(query, function(error, rows) {
