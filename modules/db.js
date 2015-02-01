@@ -248,7 +248,7 @@ function getMenuList(order, level, choices, callback) {
                     query = "SELECT DISTINCT COUNT(id) AS data, artist AS title FROM audio_file GROUP BY artist ORDER BY artist";
                     break;
                 case 1:
-                    query = "SELECT DISTINCT id AS data, album AS title FROM audio_file WHERE artist = '" + choices[0].title + "' ORDER BY album";
+                    query = "SELECT DISTINCT COUNT(id) AS data, album AS title FROM audio_file WHERE artist = '" + choices[0].title + "' GROUP BY album ORDER BY album";
                     last = true;
                     break;
             }

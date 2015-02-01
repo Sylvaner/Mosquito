@@ -125,10 +125,10 @@ describe('Test database module methods', function() {
             ];
             db.getFileList(db.ORDER_BY_GENRE, 0, null, function(list1) {
                 assert.equal(11, list1.length);
-                assert.equal("Boomboom", list1[3].artist);
+                assert.equal("Boomboom", list1[2].artist);
                 db.getFileList(db.ORDER_BY_GENRE, 1, choices, function(list2) {
                     assert.equal(3, list2.length);
-                    assert.equal("42", list2[1].title);
+                    assert.equal("42", list2[2].title);
                     db.getFileList(db.ORDER_BY_GENRE, 2, choices, function(list3) {
                         assert.equal(2, list3.length);
                         assert.equal("100", list3[0].title);
@@ -146,7 +146,7 @@ describe('Test database module methods', function() {
         ];
         db.getFileList(db.ORDER_BY_ARTIST, 0, null, function(list1) {
             assert.equal(11, list1.length);
-            assert.equal("1200", list1[2].title);
+            assert.equal("1200", list1[4].title);
             db.getFileList(db.ORDER_BY_ARTIST, 1, choices, function(list2) {
                 assert.equal(1, list2.length);
                 assert.equal("90", list2[0].title);
@@ -167,7 +167,7 @@ describe('Test database module methods', function() {
         ];
         db.getFileList(db.ORDER_BY_YEAR, 0, null, function(list1) {
             assert.equal(11, list1.length);
-            assert.equal("Best quality", list1[4].album);
+            assert.equal("Best quality", list1[3].album);
             db.getFileList(db.ORDER_BY_YEAR, 1, choices, function(list2) {
                 assert.equal(2, list2.length);
                 assert.equal(1, list2[1].track);

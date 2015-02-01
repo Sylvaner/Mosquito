@@ -85,7 +85,7 @@ describe('Test routes/ajax', function() {
         });
         var expressSendProxy1 = new ExpressSendProxy(function(data) {
             assert.equal(11, data.length);
-            assert.equal('1200', data[2].title);
+            assert.equal('1200', data[4].title);
             ajax.post(data2, expressSendProxy2);
         });
         ajax.post(data1, expressSendProxy1);

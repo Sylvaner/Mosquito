@@ -56,6 +56,11 @@ class TestScriptScan(unittest.TestCase):
 		self.assertEqual("'03'", scan.extractTrack("03/11"))
 		self.assertEqual("'00'", scan.extractTrack("A_Text"))
 
+	def testExtractYear(self):
+		self.assertEqual("'1982'", scan.extractYear("1982"))
+		self.assertEqual("'1983'", scan.extractYear("01-01-1983"))
+		self.assertEqual("'1984'", scan.extractYear("1984-01-01"))
+
 	def testReadMp3FileData(self):
 		data = {'path': os.path.abspath("test/data/Rock/Heavy/300.mp3")}
 		data = scan.readMp3FileData(data['path'], data)

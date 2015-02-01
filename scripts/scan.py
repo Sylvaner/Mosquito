@@ -73,7 +73,31 @@ def extractTrack(trackStr):
 	if track < 10:
 		ret = "0"+ret
 	return "'"+ret+"'"
-		
+
+# Function: extractYear	
+#
+# Extract the year.
+#
+# Parameters:
+#  dateStr - String that contains the date.
+#
+# Returns
+#  integer - Year.
+#
+def extractYear(dateStr):
+	year = ""
+	try:
+		if not "-" in dateStr:
+			year = dateStr
+		else:
+			dateArr = dateStr.split('-')
+			for data in dateArr:
+				if len(data) == 4:
+					year = data
+	except ValueError:
+		year = ""
+	return "'"+year+"'"
+
 # Function: readMp3FileData
 #
 # Read data of mp3 file.
@@ -153,7 +177,7 @@ def readFileData(db, filePath, extension):
 		data['artist'] = readAttribute(db, generalData, 'artist', True)
 		data['album'] = readAttribute(db, generalData, 'album', True)
 		data['track'] = extractTrack(readAttribute(db, generalData, 'tracknumber', False))
-		data['year'] = readAttribute(db, generalData, 'date', True)
+		data['year'] = extractYear(readAttribute(db, generalData, 'date', False))
 		data['genre'] = readAttribute(db, generalData, 'genre', False)
 
 		if extension == '.mp3':
