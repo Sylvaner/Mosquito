@@ -25,6 +25,8 @@ var uiContentSelectedFiles = $([]);
 var uiDraggableOffset = {top: 0, left: 0};
 
 function UI() {
+    this.searchHistory = null;
+    
     /**
      * Function: initEvents
      *
@@ -39,11 +41,6 @@ function UI() {
         $('#delete-all').click(function() {
             player.deleteAll();
         });
-        $('#search-button').click($.proxy(this.launchSearch, this));
-        $('#search-input').keyup($.proxy(function(e) {
-            if (e.keyCode == 13)
-                this.launchSearch();
-        }, this));
         $('#player-list').dblclick(function() {
             player.launchSelected();
         });
@@ -64,6 +61,30 @@ function UI() {
         $('#by-year').click($.proxy(function() {
             this.chgMenuOrder(3);
         }, this));
+        $('#search-button').click($.proxy(this.launchSearch, this));
+        $('#search-input').keyup($.proxy(function(e) {
+            if (e.keyCode == 13)
+                this.launchSearch();
+        }, this));
+
+        var searchHistoryStr = localStorage.getItem('searchHistory');
+        var searchHistory = null;
+        if (searchHistoryStr != null) 
+            searchHistory = JSON.parse(searchHistoryStr);
+        else
+            searchHistory = {items: []};
+        this.searchHistory = searchHistory;
+        
+        this.updateSearchHistory();
+    }
+    
+    /**
+     * Function: updateSearchHistory
+     * 
+     * Update search autocompletion.
+     */
+    this.updateSearchHistory = function() {
+        $('#search-input').autocomplete({source: this.searchHistory['items']});
     }
     /**
      * Function: initContent
@@ -287,6 +308,11 @@ function UI() {
      */
     this.launchSearch = function() {
         var searchValue = $('#search-input').val();
+        // Add to history
+        this.searchHistory['items'].push(searchValue);
+        localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
+        this.updateSearchHistory();
+        
         var loadingDiv = this.addLoadingDiv($('#content'));
 
         $('#file-list').empty();
