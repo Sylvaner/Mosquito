@@ -83,10 +83,16 @@ def showMenu():
 
 def which(command):
 	try:
-		subprocess.call([command, '--version'], stdout=subprocess.DEVNULL)
+		null = subprocess.DEVNULL
+	except AttributeError:
+		null = open("/dev/null", "w")
+	try:
+		subprocess.call([command, '--version'], stdout=null)
 		return True
-	except FileNotFoundError:
+	except OSError:
 		return False
+	
+
 
 def askYorN(ask, defaultValue):
 	askValues = ' [Y/n]: '
@@ -149,13 +155,13 @@ def installBoot():
 		# Set +x to init.d script
 		os.chmod("/etc/init.d/mosquito", 0o755)
 		os.system("update-rc.d mosquito defaults > /dev/null 2>&1")
-	except FileNotFoundError:
+	except OSError:
 		print('Init script template not found.')
 
 def installScript():
 	global installCommand
 
-	if sys.platform == "linux":
+	if "linux" in sys.platform:
 		distrib = platform.dist()[0]
 		if "Mint" in distrib or "buntu" in distrib or "ebian" in distrib:
 			installCommand = "apt-get install "
@@ -243,7 +249,7 @@ def uninstall(printStatus):
 		configFile = open('config/config.json')
 		config = json.load(configFile)
 		configFile.close()
-	except FileNotFoundError:
+	except OSError:
 		print("Config file already deleted")
 	if configFile is not None:
 		if printStatus:
