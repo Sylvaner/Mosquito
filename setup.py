@@ -26,50 +26,50 @@ import platform
 import subprocess
 import json
 
-defaultHost = 'localhost'
-defaultUser = 'root'
-defaultDatabase = 'mosquito'
-baseUser = ''
+default_host = 'localhost'
+default_user = 'root'
+default_database = 'mosquito'
+base_user = ''
 host = ''
 user = ''
 database = ''
 password = ''
 
-packageDependencies = [
+package_dependencies = [
 {
 	'name': 'NodeJs',
 	'commands': ['node', 'nodejs'],
-	'packageName': 'nodejs',
-	'checked': False
+	'package_name': 'nodejs',
+	'found': -1
 },
 {
 	'name': 'Npm',
 	'commands': ['npm'],
-	'packageName': 'npm',
-	'checked': False
+	'package_name': 'npm',
+	'found': -1
 },
 {
 	'name': 'Python3',
 	'commands': ['python3'],
-	'packageName': 'python3',
-	'checked': False
+	'package_name': 'python3',
+	'found': -1
 },
 {
 	'name': 'Pip3',
-	'commands': ['pip3'],
-	'packageName': 'python3-pip',
-	'checked': False
+	'commands': ['pip3', 'pip-3.3'],
+	'package_name': 'python3-pip',
+	'found': -1
 },
 {
 	'name': 'MySQL Server',
 	'commands': ['mysql'],
-	'packageName': 'mysql-server',
-	'checked': False
+	'package_name': 'mysql-server',
+	'found': -1
 }
 ]
-installCommand = ""
+install_command = ""
 
-def showMenu():
+def show_menu():
 	print('\n -=| Mosquito Media Player Setup |=- \n')
 	print('\t1. Install')
 	print('\t2. Reset config')
@@ -94,15 +94,15 @@ def which(command):
 	
 
 
-def askYorN(ask, defaultValue):
-	askValues = ' [Y/n]: '
+def ask_y_n(ask, default_value):
+	ask_values = ' [Y/n]: '
 	answer = 'Fooooooo'
 	answered = False
 	ret = False
-	if defaultValue.lower() == 'n':
-		askValues = ' [y/N]: '
+	if default_value.lower() == 'n':
+		ask_values = ' [y/N]: '
 	while not answered: 
-		answer = input(ask+askValues)
+		answer = input(ask+ask_values)
 		if answer.lower() == 'y' or answer == '':
 			ret = True
 			answered = True
@@ -112,114 +112,118 @@ def askYorN(ask, defaultValue):
 	return ret
 
 
-def checkConfig():
+def check_config():
 	print("\n=== Check packages dependencies ===")
-	checkedCount = 0
-	for package in packageDependencies:
+	checked_count = 0
+	for package in package_dependencies:
 		print(package['name']+" : ",end="")
-		commandFound = 0
-		for command in package['commands']:
-			if which(command):
-				commandFound = 1
-		if commandFound > 0:
+		command_found = 0
+		for i in range(len(package['commands'])):
+			if which(package['commands'][i]):
+				command_found = i
+				break
+		if command_found != -1:
 			print("Ok")
-			package['checked'] = True
-			checkedCount += 1
+			checked_count = checked_count + 1
+			package['found'] = i
 		else:
 			print("Not found")
-	return checkedCount
+	return checked_count
 
-def installMissingPackages():
-	if installCommand != "":
-		packageList = ""
+def install_missing_packages():
+	if install_command != "":
+		package_list = ""
 		print("\n=== Install missing packages ===")
-		for package in packageDependencies:
-			if not package['checked']:
-				packageList += package['packageName']+" "
-		print(installCommand+packageList)
-		os.system(installCommand+packageList);
+		for package in package_dependencies:
+			if package['found'] == -1:
+				package_list += package['package_name']+" "
+		print(install_command+package_list)
+		os.system(install_command+package_list);
 
-def installBoot():
+def install_boot():
 	try:
 		if os.path.exists('/etc/init.d/mosquito'):
 			os.system('/etc/init.d/mosquito stop') 
 			os.system('rm -fr /etc/init.d/mosquito')
 		# Copy file from template
-		initTemplate = open('install/init_script.tpl')
-		initFile = open('/etc/init.d/mosquito', 'w')
+		init_template = open('install/init_script.tpl')
+		init_file = open('/etc/init.d/mosquito', 'w')
 		cwd = os.getcwd()
-		for line in initTemplate:
-			initFile.write(line.replace('##########', cwd))
-		initFile.close()
-		initTemplate.close()
+		nodejs_cmd = package_dependencies[0]['commands'][package_dependencies[0]['found']]
+		for line in init_template:
+			line = line.replace('$$$$$$$$$$', nodejs_cmd)
+			init_file.write(line.replace('##########', cwd))
+		init_file.close()
+		init_template.close()
 		# Set +x to init.d script
 		os.chmod("/etc/init.d/mosquito", 0o755)
 		os.system("update-rc.d mosquito defaults > /dev/null 2>&1")
 	except OSError:
 		print('Init script template not found.')
 
-def installScript():
-	global installCommand
+def install_script():
+	global install_command
 
 	if "linux" in sys.platform:
 		distrib = platform.dist()[0]
 		if "Mint" in distrib or "buntu" in distrib or "ebian" in distrib:
-			installCommand = "apt-get install "
+			install_command = "apt-get install "
 		if "edhat" in distrib or "edora" in distrib:
-			installCommand = "yum -y install "
-	if installCommand == "":
+			install_command = "yum -y install "
+	if install_command == "":
 		print("Platform unknow")
 		print(sys.platform)
 		print(platform.dist())
 		exit(1)
 	print("\n=== Check configuration ===")
-	if len(packageDependencies) != checkConfig():
-		installMissingPackages()
-		if len(packageDependencies) != checkConfig():
-			for package in packageDependencies:
-				if not package['checked']:
+	if len(package_dependencies) != check_config():
+		install_missing_packages()
+		if len(package_dependencies) != check_config():
+			for package in package_dependencies:
+				if package['found'] == -1:
 					print("Problem with "+package['name'])
 			quit()		
 	
+	pip_command = package_dependencies[3]['commands'][package_dependencies[3]['found']]
 	print("\n=== Install python3 modules ===")
-	os.system("pip3 install pymysql")
-	os.system("pip3 install mutagen")
+	os.system(pip_command+" install pymysql")
+	os.system(pip_command+" install mutagen")
 	print("\n=== Install NodeJs module ===")
 	os.system("npm install --no-bin-links")
 	os.system('mkdir config')
-	configScript()
+	config_script()
 	# Change config file owner
 	os.system('chown $SUDO_USER -R config')
 	os.system('chgrp $SUDO_USER -R config')
 	os.chmod("config/config.json", 0o666)
 	
-	if askYorN('Start automatically on boot', 'y'):
-		installBoot()
+	if ask_y_n('Start automatically on boot', 'y'):
+		install_boot()
 		os.system('sudo /etc/init.d/mosquito start');
 	print("\n=== Installation success ===")
 	path = input('Music library path : ')
 	
 	print("\n=== Update database settings ===")
 	os.system("mysql -h"+host+" -u "+user+" -p"+password+" "+database+" -e \"UPDATE settings SET value = '"+path+"' WHERE name = 'path'\"")
-	if askYorN('Scan now form music', 'y'):
+	if ask_y_n('Scan now form music', 'y'):
 		os.system('./scripts/scan.py '+path+' config/config.json')
 
-def configScript():
+def config_script():
 	global host
 	global user
 	global database
 	global password
 	print("\n=== Configuration ===")
-	host = input('MySQL host ['+defaultHost+']: ')
+	host = input('MySQL host ['+default_host+']: ')
 	if host == "":
-		host = defaultHost
-	user = input('MySQL user ['+defaultUser+']: ')
+		host = default_host
+	user = input('MySQL user ['+default_user+']: ')
 	if user == "":
-		user = defaultUser
+		user = default_user
 	password = input('MySQL password : ')
-	database= input('MySQL database ['+defaultDatabase+']: ')
+	database= input('MySQL database ['+default_database+']: ')
 	if database == "":
-		database = defaultDatabase
+		database = default_database
 	if os.path.exists('config/config.json'):
 		print("\n=== Delete old data ===")
 		uninstall(False)
@@ -242,20 +246,20 @@ def configScript():
 	with open('config/config.json', 'w') as outConfigFile:
 		json.dump(config, outConfigFile, sort_keys=False, indent=4)
 		
-def uninstall(printStatus):
-	configFile = None
+def uninstall(print_status):
+	config_file = None
 	# Read current config
 	try:
-		configFile = open('config/config.json')
-		config = json.load(configFile)
-		configFile.close()
+		config_file = open('config/config.json')
+		config = json.load(config_file)
+		config_file.close()
 	except OSError:
 		print("Config file already deleted")
-	if configFile is not None:
-		if printStatus:
+	if config_file is not None:
+		if print_status:
 			print("\n=== Drop database ===")
 		os.system('./install/db_uninstall.sh '+config['host']+' '+config['user']+' '+config['password']+' '+config['database'])
-		if printStatus:
+		if print_status:
 			print("\n=== Delete config file ===")
 		os.remove('config/config.json')
 	# Remove init.d script
@@ -263,7 +267,7 @@ def uninstall(printStatus):
 		os.system('update-rc.d -f mosquito remove > /dev/null 2>&1')
 		
 # Launch uninstall script
-def uninstallScript():
+def uninstall_script():
 	print("\n=== Uninstall ===")
 	uninstall(True)
 	print("\n=== Uninstall success ===")
@@ -278,12 +282,12 @@ if os.getuid() != 0:
 	print("Install must be run as root (sudo).")
 	exit(1)
 
-showMenuPrompt = True
+show_menu_prompt = True
 choice = 0;
-while (showMenuPrompt):
-	choice = showMenu()
+while (show_menu_prompt):
+	choice = show_menu()
 	if choice > 0 and choice < 5:
-		showMenuPrompt = False
-choicesFunc = {1: installScript, 2: configScript, 3: uninstallScript, 4: quit}
-choicesFunc[choice]();
+		show_menu_prompt = False
+choices_func = {1: install_script, 2: config_script, 3: uninstall_script, 4: quit}
+choices_func[choice]();
 

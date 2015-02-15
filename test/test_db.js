@@ -49,6 +49,7 @@ describe('Test database module methods', function() {
         assert.equal('double quote \\"escape', db.escapeStr('double quote "escape'));
         done();
     });
+    
     it('Test getGenreList method', function(done) {
         db.getGenreList(function(list1) {
             // List order by name

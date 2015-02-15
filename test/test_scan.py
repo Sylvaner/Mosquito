@@ -49,26 +49,28 @@ class TestScriptScan(unittest.TestCase):
 		cursor.execute("INSERT INTO genre (id, name) VALUES (1, 'Unknow')")
 		cursor.close()
 		db.commit()
-		scan.genreList = {}
+		scan.genre_list = {}
 
-	def testExtractTrack(self):
-		self.assertEqual("'01'", scan.extractTrack("01"))
-		self.assertEqual("'03'", scan.extractTrack("03/11"))
-		self.assertEqual("'00'", scan.extractTrack("A_Text"))
+	def test_extract_track(self):
+		self.assertEqual("'01'", scan.extract_track("01"))
+		self.assertEqual("'03'", scan.extract_track("03/11"))
+		self.assertEqual("'00'", scan.extract_track("A_Text"))
 
-	def testExtractYear(self):
-		self.assertEqual("'1982'", scan.extractYear("1982"))
-		self.assertEqual("'1983'", scan.extractYear("01-01-1983"))
-		self.assertEqual("'1984'", scan.extractYear("1984-01-01"))
+	def test_extract_year(self):
+		self.assertEqual(1982, scan.extract_year("1982"))
+		self.assertEqual(1983, scan.extract_year("01-01-1983"))
+		self.assertEqual(1984, scan.extract_year("1984-01-01"))
+		self.assertEqual(0, scan.extract_year("AWrongDate"))
 
-	def testReadMp3FileData(self):
+	def test_read_mp3_file_data(self):
 		data = {'path': os.path.abspath("test/data/Rock/Heavy/300.mp3")}
-		data = scan.readMp3FileData(data['path'], data)
-		self.assertEqual("'10.004897959183673'", data['length'])
-		self.assertEqual('161548', data['bitrate'])
+		length, bitrate = scan.read_mp3_file_data(data['path'])
+		self.assertEqual("'10.004897959183673'", length)
+		self.assertEqual(161548, bitrate)
 		data = {'path': os.path.abspath("test/data/Techno/NotAMusicFile.txt")}
-		data = scan.readMp3FileData(data['path'], data)
-		self.assertEqual('', data['length'])
+		length, bitrate = scan.read_mp3_file_data(data['path'])
+		self.assertEqual('NULL', length)
+		self.assertEqual(0, bitrate)
 
 #	def testReadFlacFileData(self):
 #		data = {'path': os.path.abspath("test/data/Classic/1200.flac")}
@@ -79,64 +81,64 @@ class TestScriptScan(unittest.TestCase):
 #		data = scan.readOggFileData(data['path'], data)
 #		self.assertEqual('NULL', data['length'])
 
-	def testReadFileData(self):
-		data = scan.readFileData(db, os.path.abspath("test/data/Jazz/1500.mp3"), "mp3")
+	def test_read_file_data(self):
+		data = scan.read_file_data(db, os.path.abspath("test/data/Jazz/1500.mp3"), "mp3")
 		self.assertEqual("'Jazzy'", data["artist"])
 		self.assertEqual("'1500'", data["title"])
 		self.assertNotEqual("NULL", data['genre'])
-		data = scan.readFileData(db, os.path.abspath("test/data/Techno/NotAMusicFile.txt"), "txt")
+		data = scan.read_file_data(db, os.path.abspath("test/data/Techno/NotAMusicFile.txt"), "txt")
 		self.assertIsNone(data)
 
-	def testAddGenre(self):
-		self.assertEqual(2, scan.addGenre(db, "Zeuhl"))
+	def test_add_genre(self):
+		self.assertEqual(2, scan.add_genre(db, "Zeuhl"))
 
-	def testGenerateGenreList(self):
-		scan.generateGenreList(db)
-		self.assertEqual(1, len(scan.genreList))
-		self.assertEqual(1, scan.genreList['Unknow'])
+	def test_generate_genre_list(self):
+		scan.generate_genre_list(db)
+		self.assertEqual(1, len(scan.genre_list))
+		self.assertEqual(1, scan.genre_list['Unknow'])
 
-	def testGetGenreId(self):
-		scan.generateGenreList(db)
-		self.assertEqual(1, scan.getGenreId(db, "Unknow"))
-		self.assertEqual(2, scan.getGenreId(db, "Zeuhl"))
+	def test_get_genre_id(self):
+		scan.generate_genre_list(db)
+		self.assertEqual(1, scan.get_genre_id(db, "Unknow"))
+		self.assertEqual(2, scan.get_genre_id(db, "Zeuhl"))
 		
-	def testFileExistsInDatabase(self):
-		data = scan.readFileData(db, os.path.abspath("test/data/Jazz/1500.mp3"), "mp3")
-		self.assertFalse(scan.fileExistsInDatabase(db, data['path']))
-		scan.addFile(db, data, "ScanCodeTest")
-		self.assertTrue(scan.fileExistsInDatabase(db, data['path']))
+	def test_file_exists_in_database(self):
+		data = scan.read_file_data(db, os.path.abspath("test/data/Jazz/1500.mp3"), "mp3")
+		self.assertFalse(scan.file_exists_in_database(db, data['path']))
+		scan.add_file(db, data, "ScanCodeTest")
+		self.assertTrue(scan.file_exists_in_database(db, data['path']))
 		
-	def testAddFile(self):
+	def test_add_file(self):
 		cursor = db.cursor()
 		cursor.execute("SELECT * FROM audio_file")
 		self.assertEqual(0, cursor.rowcount)
-		data = scan.readFileData(db, os.path.abspath("test/data/Rock/Heavy/300.mp3"), "mp3")
-		scan.addFile(db, data, "ScanCodeTest")
+		data = scan.read_file_data(db, os.path.abspath("test/data/Rock/Heavy/300.mp3"), "mp3")
+		scan.add_file(db, data, "ScanCodeTest")
 		cursor.execute("SELECT * FROM audio_file")
 		self.assertEqual(1, cursor.rowcount)
 		cursor.close()
 		
-	def testReadConfigFile(self):
-		tmpConfigFilePath = os.getcwd()+"/test/tmp/test.json"
-		tmpConfigFile = open(tmpConfigFilePath, 'w+')
-		tmpConfigFile.write('{\n\t"foo": "bar"\n}\n');
-		tmpConfigFile.close()
-		testConfig = scan.readConfigFile(tmpConfigFilePath)
-		self.assertEqual("bar", testConfig["foo"])
+	def test_read_config_file(self):
+		tmp_config_file_path = os.getcwd()+"/test/tmp/test.json"
+		tmp_config_file = open(tmp_config_file_path, 'w+')
+		tmp_config_file.write('{\n\t"foo": "bar"\n}\n');
+		tmp_config_file.close()
+		test_config = scan.read_config_file(tmp_config_file_path)
+		self.assertEqual("bar", test_config["foo"])
 	
-	def testConnectDatabase(self):
-		testDb = scan.connectDatabase(config)
-		cursor = testDb.cursor()
+	def test_connect_database(self):
+		test_db = scan.connect_database(config)
+		cursor = test_db.cursor()
 		cursor.execute("SHOW TABLES")
 		self.assertNotEqual(0, cursor.rowcount)
 		cursor.close()
 	
-	def testGenerateScanCode(self):
-		scanCode = scan.generateScanCode()
-		self.assertIsInstance(scanCode, str)
-		self.assertEqual(8, len(scanCode))
+	def test_generate_scan_code(self):
+		scan_code = scan.generate_scan_code()
+		self.assertIsInstance(scan_code, str)
+		self.assertEqual(8, len(scan_code))
 		
-	def testScanPath(self):
+	def test_scan_path(self):
 		cursor = db.cursor()
 		query1 = "SELECT * FROM audio_file WHERE scan_code = 'UnitTest1'"
 		query2 = "SELECT * FROM audio_file WHERE scan_code = 'UnitTest2'"
@@ -146,19 +148,19 @@ class TestScriptScan(unittest.TestCase):
 		cursor.execute(query1)
 		self.assertEqual(0, cursor.rowcount)
 
-		scan.scanPath(db, os.path.abspath("test/data/Rock"), "UnitTest1")
+		scan.scan_path(db, os.path.abspath("test/data/Rock"), "UnitTest1")
 
 		cursor.execute(query1)
 		self.assertEqual(3, cursor.rowcount)
 
-		scan.scanPath(db, os.path.abspath("test/data/Techno"), "UnitTest2")
+		scan.scan_path(db, os.path.abspath("test/data/Techno"), "UnitTest2")
 
 		cursor.execute(query1)
 		self.assertEqual(3, cursor.rowcount)
 		cursor.execute(query2)
 		self.assertEqual(1, cursor.rowcount)
 
-		scan.scanPath(db, os.path.abspath("test/data"), "UnitTest3")
+		scan.scan_path(db, os.path.abspath("test/data"), "UnitTest3")
 
 		cursor.execute(query1)
 		self.assertEqual(0, cursor.rowcount)
@@ -171,18 +173,18 @@ class TestScriptScan(unittest.TestCase):
 
 		cursor.close()
 
-	def testScan(self):
+	def test_scan(self):
 		cursor = db.cursor()
 		now = datetime.datetime.now()
 		
-		startTimeRegex = r'^'+str('%04d' % now.year)+'\-'+str('%02d' % now.month)+'\-'+str('%02d' % now.day)+'\:'+str('%02d' % now.hour)+'\:.{2}$'
+		start_time_regex = r'^'+str('%04d' % now.year)+'\-'+str('%02d' % now.month)+'\-'+str('%02d' % now.day)+'\:'+str('%02d' % now.hour)+'\:.{2}$'
 		# First pass
-		redirectOutput = RedirectOutput()
+		redirect_output = RedirectOutput()
 		saveStdOut = sys.stdout
-		sys.stdout = redirectOutput
+		sys.stdout = redirect_output
 		scan.scan("test/data", "test/tmp/config.json")
 		sys.stdout = saveStdOut
-		self.assertEqual('11\n', redirectOutput.output)
+		self.assertEqual('11\n', redirect_output.output)
 		# Get scan code for test with second pass
 		cursor.execute("SELECT value FROM settings WHERE name='last_scan_code'")
 		result = cursor.fetchone()
@@ -193,19 +195,19 @@ class TestScriptScan(unittest.TestCase):
 		# Scan start time
 		cursor.execute("SELECT value FROM settings WHERE name='last_scan_start_time'")
 		result = cursor.fetchone()
-		self.assertRegex(result[0], startTimeRegex)
+		self.assertRegex(result[0], start_time_regex)
 		# Scan state (Finish)
 		cursor.execute("SELECT value FROM settings WHERE name='last_scan_state'")
 		result = cursor.fetchone()
 		self.assertEqual(1, int(result[0]))
 		
 		# Second pass
-		redirectOutput = RedirectOutput()
+		redirect_output = RedirectOutput()
 		saveStdOut = sys.stdout
-		sys.stdout = redirectOutput
+		sys.stdout = redirect_output
 		scan.scan("test/data", "test/tmp/config.json")
 		sys.stdout = saveStdOut
-		self.assertEqual('11\n', redirectOutput.output)
+		self.assertEqual('11\n', redirect_output.output)
 		# Same number of files
 		cursor.execute("SELECT * FROM audio_file")
 		self.assertEqual(11, cursor.rowcount)
@@ -218,9 +220,9 @@ class TestScriptScan(unittest.TestCase):
 if __name__ == "__main__":
 	# Open config file
 	try:
-		configFile = open(os.getcwd()+"/test/tmp/config.json")
-		config = json.load(configFile)
-		configFile.close()
+		config_file = open(os.getcwd()+"/test/tmp/config.json")
+		config = json.load(config_file)
+		config_file.close()
 	except FileNotFoundError:
 		print("Config file not found.")
 		sys.exit(1)

@@ -12,10 +12,11 @@
 RETURN_VALUE=0
 SERVER_DIR="##########"
 LOCK="/tmp/mosquito.lock"
+LOG="/var/log/mosquito"
 
 do_start() {
 	if [ ! -f $LOCK ]; then
-		nodejs $SERVER_DIR/app.js &
+		$$$$$$$$$$ $SERVER_DIR/app.js >> $LOG &
 		PID=$!
 		if [ $PID ]; then
 			echo $PID > $LOCK
