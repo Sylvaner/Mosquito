@@ -42,7 +42,6 @@ function Shortcuts() {
      * Test if shortcut is called.
      */
     this.testShortcut = function(event) {
-        console.log(event.keyCode);
         switch (event.keyCode) {
             // Enter
             case 13:
