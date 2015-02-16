@@ -173,7 +173,7 @@ def read_file_data(db, file_path, extension):
 	data = {'path': file_path}
 	try:
 		general_data = mutagen.File(file_path, easy=True)
-	except (FileNotFoundError, OSError):
+	except OSError:
 		return None
 
 	if general_data is not None:
@@ -342,7 +342,7 @@ def read_config_file(config_file_path):
 		config_file = open(config_file_path)
 		config = json.load(config_file)
 		config_file.close()
-	except FileNotFoundError:
+	except OSError:
 		print("Config file not found.")
 		sys.exit(1)
 	return config
