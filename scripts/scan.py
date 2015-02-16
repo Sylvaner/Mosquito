@@ -184,7 +184,7 @@ def read_file_data(db, file_path, extension):
 		data['year'] = extract_year(read_attribute(db, general_data, 'date', False))
 		data['genre'] = read_attribute(db, general_data, 'genre', False)
 
-		if extension == '.mp3':
+		if 'mp3' in extension:
 			data['length'], data['bitrate'] = read_mp3_file_data(file_path)
 #		elif extension == ".ogg":
 #			data = readOggFileData(file_path, data)
@@ -343,7 +343,7 @@ def read_config_file(config_file_path):
 		config = json.load(config_file)
 		config_file.close()
 	except OSError:
-		print("Config file not found.")
+		print("Config file problem.")
 		sys.exit(1)
 	return config
 
