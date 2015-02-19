@@ -1,8 +1,8 @@
 # English
 
 ## Introduction
-Mosquito is a web media player running on client / server model.
-Once installed on a computer, your music library is available on all the computers of local network.
+Mosquito is a web media player running on client / server model. 
+Install only one time on a computer and all devices of your network will be able to play your music on web browser.
 
 ## Installation
 [Installation guide](https://github.com/Sylvaner/Mosquito/wiki/Installation-guide)
@@ -16,7 +16,7 @@ GPLv2 : [http://www.gnu.org/licenses/gpl-2.0.html](http://www.gnu.org/licenses/g
 
 ## Introduction
 Mosquito est un lecteur multimédia internet fonctionnant sur un modèle de client / serveur.
-Une fois installé sur un poste, votre bibliothèque musicale est accessible sur l'ensemble des ordinateurs de votre réseau local.
+Installez le sur un ordinateur et toutes les périphériques de votre réseau seront capable de jouer votre musique depuis un navigateur internet.
 
 ## Installation
 [Guide d'installation](https://github.com/Sylvaner/Mosquito/wiki/Installation-guide)
