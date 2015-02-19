@@ -38,7 +38,7 @@ function ExpressSendProxy(sendFunc)
 {
     this.contentType = function(data) {
     },
-            this.send = sendFunc
+            this.json = sendFunc
 }
 
 describe('Test routes/ajax', function() {

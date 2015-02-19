@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
+ **/
 /**
  * Class: Client Player
  */
@@ -32,7 +32,7 @@ function Player() {
     this.currentPlayState = false;
     this.shuffle = false;
     this.repeatState = REPEAT_OFF;
-    
+
     /**
      * Function: initEvents
      *
@@ -42,7 +42,9 @@ function Player() {
     this.initEvents = function()
     {
         $('#play-button').click($.proxy(this.playButton, this));
-        $('#next-button').click($.proxy(function(){this.nextMusic(true);}, this));
+        $('#next-button').click($.proxy(function() {
+            this.nextMusic(true);
+        }, this));
         $('#previous-button').click($.proxy(this.previousMusic, this));
         $('#player-option-shuffle').click($.proxy(this.toggleShuffle, this));
         $('#player-option-repeat').click($.proxy(this.chgRepeatState, this));
@@ -209,7 +211,7 @@ function Player() {
      *  userAction - True if the user launch next music.
      */
     this.nextMusic = function(userAction) {
-        var playListLength = $(this.playerListId+' option').length;
+        var playListLength = $(this.playerListId + ' option').length;
         var step = 1;
         // If shuffle is activated, random, except repeat one state
         if (this.shuffle && this.repeatState < REPEAT_ONE)
@@ -289,7 +291,7 @@ function Player() {
         this.launchFile(this.playerList.find('option:selected').index(), true);
         this.playerList.find('option:selected').prop('selected', false);
     }
-    
+
     /**
      * Function: changePlayState
      * 
@@ -301,47 +303,14 @@ function Player() {
     this.changePlayState = function(newPlayState) {
         if (newPlayState != this.currentPlayState)
         {
-            var imgDest = '/images/'+theme+'/play.png';
+            var imgDest = '/images/' + theme + '/play.png';
             if (newPlayState)
-                imgDest = '/images/'+theme+'/pause.png';
-            var toRotate = $('#play-button')
-            var self = this;
-            this.rotateItem(toRotate, 100, 0, 90, function(){
-                $('#play-button img').attr('src', imgDest);
-                self.rotateItem(toRotate, 100, -90, 0, null);
-            });
+                imgDest = '/images/' + theme + '/pause.png';
+            imgDivChg(imgDest, '#play-button');
         }
         this.currentPlayState = newPlayState;
     }
-    
-    /**
-     * Function: rotateItem
-     * 
-     * Rotate an item on Y axis.
-     * 
-     * Parameters:
-     *  item - Item to rotate.
-     *  duration - Duration of animation.
-     *  from - Start rotation.
-     *  to - End rotation.
-     *  callback - Function called when animation is finish.
-     */
-    this.rotateItem = function(item, duration, from, to, callback) {
-        $({deg: from}).animate({deg: to}, {
-            step: function(deg) {
-              item.css('-moz-transform','rotateY('+deg+'deg)');
-              item.css('-webkit-transform','rotateY('+deg+'deg)');
-              item.css('-o-transform','rotateY('+deg+'deg)');
-              item.css('transform','rotateY('+deg+'deg)');
-            },
-            duration: duration,
-            complete: function(){
-                if (callback)
-                    callback();
-            }
-        });
-    }
-    
+
     /**
      * Function: toggleShuffle
      * 
@@ -352,7 +321,7 @@ function Player() {
         var img = "off";
         if (this.shuffle)
             img = "on"
-        $('#player-option-shuffle img').attr('src', '/images/'+theme+'/shuffle_'+img+'.png');
+        $('#player-option-shuffle img').attr('src', '/images/' + theme + '/shuffle_' + img + '.png');
     }
 
     /**
@@ -367,9 +336,9 @@ function Player() {
             img = "on";
         if (this.repeatState == REPEAT_ONE)
             img = "one";
-        $('#player-option-repeat img').attr('src', '/images/'+theme+'/repeat_'+img+'.png');
+        $('#player-option-repeat img').attr('src', '/images/' + theme + '/repeat_' + img + '.png');
     }
-    
+
     /**
      * Function: showFileData
      * 

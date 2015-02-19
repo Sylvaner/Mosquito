@@ -240,6 +240,7 @@ def config_script():
 		'localesDirectory': '/locales',
 		'locale': 'en',
 		'theme': 'default',
+		'mobileTheme': 'default-mob',
 		'filesLimit': '2000',
 		'supportedFiles': ['mp3', 'flac', 'ogg']
 	}

@@ -48,7 +48,6 @@ exports.init = function(connection) {
  *  res.send(data) - Query data.
  */
 exports.post = function(req, res) {
-    res.contentType('json');
     if (req.body.query != 'undefined') {
         queryData = req.body.queryData;
 
@@ -93,7 +92,7 @@ function getMenuList(res, data) {
     if (debug)
         console.log('AQ (getMenuList) : ' + data.order + ' ; ' + data.level + ' ; ' + data.choices);
     db.getMenuList(data.order, data.level, data.choices, function(list, last) {
-        res.send({
+        res.json({
             list: list,
             isLast: last
         });
@@ -114,7 +113,7 @@ function getFileList(res, data) {
     if (debug)
         console.log('AQ (getFileList) : ' + data.order + ' ; ' + data.level + ' ; ' + data.choices);
     db.getFileList(data.order, data.level, data.choices, function(list) {
-        res.send(list);
+        res.json(list);
     });
 }
 
@@ -130,7 +129,7 @@ function getFileList(res, data) {
  */
 function getFileData(res, fileId) {
     db.getFileData(fileId, function(data) {
-        res.send(data);
+        res.json(data);
     });
 }
 
@@ -148,7 +147,7 @@ function getSearchFileList(res, search) {
     if (debug)
         console.log('AQ (getSearchFileList) : ' + search);
     db.getSearchFileList(search, function(list) {
-        res.send(list);
+        res.json(list);
     });
 }
 
@@ -166,7 +165,7 @@ function getSettingValue(res, name) {
     if (debug)
         console.log('AQ (getSettingValue) : ' + name);
     db.getSettingValue(name, function(value) {
-        res.send({setting: value});
+        res.json({setting: value});
     });
 }
 
@@ -182,7 +181,7 @@ function setSettingValue(res, name, value) {
     if (debug)
         console.log('AQ (setSettingValue) : ' + name + ' = ' + value);
     db.setSettingValue(name, value, function(value) {
-        res.send({return: value});
+        res.json({return: value});
     });
 }
 
@@ -199,6 +198,6 @@ function getFilesCount(res) {
     if (debug)
         console.log('AQ (getFilesCount)');
     db.getFilesCount(function(value) {
-        res.send({count: value});
+        res.json({count: value});
     });
 }

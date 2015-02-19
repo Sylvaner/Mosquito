@@ -1,0 +1,107 @@
+*
+{
+      overflow: hidden;
+}
+
+html
+{
+    width: 100%;
+    height: 100%;
+    font-family: sans-serif;
+}
+
+#menu, #content, #player
+{
+    display: block;
+    position: absolute;
+    width: 100%;
+}
+
+#menu
+{
+    height: 4em;
+    background-color: #2D2D2D;
+}
+
+#content
+{
+    top: 4em;
+    bottom: 6em;
+    overflow: hidden;
+}
+
+#player
+{
+    bottom: 0;
+    height: 6em;
+    color: white;
+    background-color: #2D2D2D;
+}
+
+#menu
+{
+    color: #FFFFFF;
+}
+
+#menu #back-button, 
+#menu #back-button img
+{
+    position: relative;
+    height: 4em;
+    width: 4em;
+}
+
+#menu #back-button
+{
+    z-index: 99;
+    cursor: pointer;
+    display: none;
+}
+
+#menu h1
+{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 2em;
+    font-size: 2em;
+    z-index: 1;
+}
+
+#content li
+{
+    display: block;
+    width: 100%;
+    height: 2em;
+    line-height: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
+    font-size: 2em;
+    border-bottom: 1px solid #CCC;
+    cursor: pointer;
+    color: #000000;
+}
+
+#content .selected
+{
+    background-color: #992222;
+    color: #FFFFFF !important;
+}
+
+#player-command
+{
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+
+#player-command div,
+#player-command img
+{
+    display: inline-block;
+    height: 6em;
+    width: 6em;
+}

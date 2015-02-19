@@ -72,8 +72,13 @@ exports.get = function(req, res) {
                         'Content-Length': stat.size
                     });
 
-                    var stream = fs.createReadStream(filePath);
-                    stream.pipe(res);
+                    var readStream = fs.createReadStream(filePath);
+                    readStream.on('data', function(data){
+                      res.write(data);
+                    });
+                    readStream.on('end', function(){
+                      res.end();
+                    });
                 }
                 else
                     console.log('File not found : '+filePath);

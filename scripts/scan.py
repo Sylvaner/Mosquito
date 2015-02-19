@@ -35,8 +35,8 @@ from os import listdir
 from mutagen.mp3 import MP3
 #from mutagen.flac import FLAC
 
-update_file_query = "UPDATE audio_file SET title = %s, artist = %s, album = %s, track = %s, year = %d, genre_fk = %d, length = %s, bitrate = %d, scan_code = '%s' WHERE path = '%s'"
-insert_file_query = "INSERT INTO audio_file (id, path, title, artist, album, track, year, genre_fk, length, bitrate, scan_code) VALUES (NULL, '%s', %s, %s, %s, %s, %d, %d, %s, %d, '%s')"
+update_file_query = "UPDATE audio_file SET title = '%s', artist = '%s', album = '%s', track = %s, year = %d, genre_fk = %d, length = %s, bitrate = %d, scan_code = '%s' WHERE path = '%s'"
+insert_file_query = "INSERT INTO audio_file (id, path, title, artist, album, track, year, genre_fk, length, bitrate, scan_code) VALUES (NULL, '%s', '%s', '%s', '%s', %s, %d, %d, %s, %d, '%s')"
 
 genre_list = {}
 debug = False
@@ -177,13 +177,12 @@ def read_file_data(db, file_path, extension):
 		return None
 
 	if general_data is not None:
-		data['title'] = read_attribute(db, general_data, 'title', True)
-		data['artist'] = read_attribute(db, general_data, 'artist', True)
-		data['album'] = read_attribute(db, general_data, 'album', True)
+		data['title'] = read_attribute(db, general_data, 'title', False)
+		data['artist'] = read_attribute(db, general_data, 'artist', False)
+		data['album'] = read_attribute(db, general_data, 'album', False)
 		data['track'] = extract_track(read_attribute(db, general_data, 'tracknumber', False))
 		data['year'] = extract_year(read_attribute(db, general_data, 'date', False))
 		data['genre'] = read_attribute(db, general_data, 'genre', False)
-
 		if 'mp3' in extension:
 			data['length'], data['bitrate'] = read_mp3_file_data(file_path)
 #		elif extension == ".ogg":
@@ -211,7 +210,7 @@ def generate_genre_list(db):
 	global genre_list
 	
 	cursor = db.cursor()
-	cursor.execute("SELECT id, name FROM genre")
+	cursor.execute("SELECT id, name FROM genre ORDER BY name")
 	for row in cursor.fetchall():
 		genre_list[row[1]] = row[0]
 	cursor.close()
@@ -229,7 +228,7 @@ def generate_genre_list(db):
 #
 def get_genre_id(db, genre_name):
 	global genre_list
-
+        
 	if genre_name in genre_list:
 		return_value = genre_list[genre_name]
 	elif genre_name == "":
@@ -243,7 +242,6 @@ def get_genre_id(db, genre_name):
 # Add genre to database.
 #
 # Parameters:
-#  db - Database connection.
 #  genre_name - Name of genre to find.
 #
 # Returns:
@@ -252,9 +250,9 @@ def get_genre_id(db, genre_name):
 def add_genre(db, genre_name):
 	global genre_list
 
-	genre_name = db.escape_string(genre_name)
+	escaped_genre_name = db.escape_string(genre_name)
 	cursor = db.cursor()
-	cursor.execute("INSERT INTO genre (id, name) VALUES (NULL, '"+genre_name+"')")
+	cursor.execute("INSERT INTO genre (id, name) VALUES (NULL, '"+escaped_genre_name+"')")
 	genre_id = cursor.lastrowid
 	genre_list[genre_name] = genre_id
 	cursor.close()
@@ -274,7 +272,7 @@ def add_genre(db, genre_name):
 #
 def file_exists_in_database(db, file_path):
 	cursor = db.cursor()
-	cursor.execute("SELECT id FROM audio_file WHERE path = '"+db.escape_string(file_path)+"'");
+	cursor.execute("SELECT id FROM audio_file WHERE path = '"+db.escape_string(file_path)+"'")
 	ret = cursor.fetchone() is not None
 	cursor.close()
 	return ret
@@ -297,9 +295,28 @@ def add_file(db, file_data, scan_code):
 	file_count += 1
 
 	if file_exists_in_database(db, file_data['path']):
-		cursor.execute(update_file_query % (file_data['title'], file_data['artist'], file_data['album'], file_data['track'], file_data['year'], get_genre_id(db, file_data['genre']), file_data['length'], file_data['bitrate'], scan_code, db.escape_string(file_data['path'])))
+		cursor.execute(update_file_query % (
+			db.escape_string(file_data['title']), 
+			db.escape_string(file_data['artist']), 
+			db.escape_string(file_data['album']), 
+			file_data['track'], 
+			file_data['year'], 
+			get_genre_id(db, file_data['genre']), 
+			file_data['length'], file_data['bitrate'], 
+			scan_code, 
+			db.escape_string(file_data['path'])))
 	else:
-		cursor.execute(insert_file_query % (db.escape_string(file_data['path']), file_data['title'], file_data['artist'], file_data['album'], file_data['track'], file_data['year'], get_genre_id(db, file_data['genre']), file_data['length'], file_data['bitrate'], scan_code))
+		cursor.execute(insert_file_query % (
+			db.escape_string(file_data['path']), 
+			db.escape_string(file_data['title']), 
+			db.escape_string(file_data['artist']), 
+			db.escape_string(file_data['album']), 
+			file_data['track'], 
+			file_data['year'], 
+			get_genre_id(db, file_data['genre']), 
+			file_data['length'], 
+			file_data['bitrate'], 
+			scan_code))
 	cursor.close()
 	db.commit()
 

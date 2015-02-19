@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
+ **/
 /**
  * Class: Client UI
  */
@@ -26,7 +26,7 @@ var uiDraggableOffset = {top: 0, left: 0};
 
 function UI() {
     this.searchHistory = null;
-    
+
     /**
      * Function: initEvents
      *
@@ -69,15 +69,15 @@ function UI() {
 
         var searchHistoryStr = localStorage.getItem('searchHistory');
         var searchHistory = null;
-        if (searchHistoryStr != null) 
+        if (searchHistoryStr != null)
             searchHistory = JSON.parse(searchHistoryStr);
         else
             searchHistory = {items: []};
         this.searchHistory = searchHistory;
-        
+
         this.updateSearchHistory();
     }
-    
+
     /**
      * Function: updateSearchHistory
      * 
@@ -86,6 +86,7 @@ function UI() {
     this.updateSearchHistory = function() {
         $('#search-input').autocomplete({source: this.searchHistory['items']});
     }
+
     /**
      * Function: initContent
      *
@@ -96,20 +97,21 @@ function UI() {
         $('#file-list').empty();
         this.loadMenuList($('#left-pane'), currentOrder, 0, null);
         this.loadFileList(1, 0, null);
-    },
-            /**
-             * Function: chgMenuOrder
-             * 
-             * Change the order for menu.
-             * 
-             * Parameters:
-             *  newOrder - Order choosed by user.
-             */
-            this.chgMenuOrder = function(newOrder) {
-                currentOrder = newOrder;
-                $('#left-pane').empty();
-                this.loadMenuList($('#left-pane'), newOrder, 0, null);
-            }
+    }
+
+    /**
+     * Function: chgMenuOrder
+     * 
+     * Change the order for menu.
+     * 
+     * Parameters:
+     *  newOrder - Order choosed by user.
+     */
+    this.chgMenuOrder = function(newOrder) {
+        currentOrder = newOrder;
+        $('#left-pane').empty();
+        this.loadMenuList($('#left-pane'), newOrder, 0, null);
+    }
 
     /**
      * Function: addSelectedButton
@@ -125,6 +127,7 @@ function UI() {
         if (data.length)
             player.addFilesList(data);
     }
+
     /**
      * Function: addAllButton
      *
@@ -312,7 +315,7 @@ function UI() {
         this.searchHistory['items'].push(searchValue);
         localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
         this.updateSearchHistory();
-        
+
         var loadingDiv = this.addLoadingDiv($('#content'));
 
         $('#file-list').empty();

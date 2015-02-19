@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
+ **/
 /**
  * Class: Serveur launch
  */
@@ -37,7 +37,6 @@ var music = require('./routes/music');
 // Objects
 var db = require('./modules/db');
 var config = require('./config/config.json');
-var app = null;
 var server = null;
 var io = null;
 global.settings = null;
@@ -51,17 +50,13 @@ function launchServer()
 {
     app = express();
     server = http.createServer(app);
-    // Configure jade template
-    app.set('views', "" + __dirname + "/views/" + global.settings.theme);
     app.set('view engine', 'jade');
-
     app.use(express.static(__dirname + '/public'));
     app.use(bodyParser.urlencoded({
         extended: true
     }));
     app.use(bodyParser.json());
     app.use(i18n.init);
-
     server.listen(config.listenPort);
 }
 
@@ -73,9 +68,30 @@ function launchServer()
 function addRoutes()
 {
     ajax.init(db);
-    music.init(db);
     app.post('/ajax', ajax.post);
+    music.init(db);
     app.get('/music/:fileId', music.get);
+}
+
+/**
+ * Function: testMobile
+ *
+ * Test if browser is a mobile.
+ *
+ * Parameters:
+ *  userAgent - String of user agent.
+ *
+ * Returns:
+ *  boolean - True if browser is on mobile.
+ */
+function testMobile(userAgent)
+{
+    var ua = userAgent.toLowerCase();
+    if (ua.indexOf('mobile') > -1)
+        return true;
+    if (ua.indexOf('android') > -1)
+        return true;
+    return false;
 }
 
 /**
@@ -88,12 +104,25 @@ function setHomePage()
     app.get('/', function(req, res) {
         if (global.settings.debug)
             console.log('Connection: show home page');
-        var cssArray = ['reset', 'global', 'jquery-ui.min', global.settings.theme + '/theme-pos', global.settings.theme + '/theme'];
-        var jsArray = ['jquery.min', 'jquery-ui', global.settings.theme + '/theme', 'settings', 'player', 'ui', 'shortcuts', '/socket.io/socket.io.js', 'app'];
+
+
+        if (global.settings.mobileTheme != '' && testMobile(req.header('user-agent'))) {
+            var theme = config.mobileTheme;
+            var cssArray = ['reset', 'global', global.settings.mobileTheme + '/theme'];
+            var jsArray = ['jquery.min', 'global', 'iscroll', 'mob-app'];
+        }
+        else {
+            var theme = global.settings.theme;
+            var cssArray = ['reset', 'global', 'jquery-ui.min', global.settings.theme + '/theme-pos', global.settings.theme + '/theme'];
+            var jsArray = ['jquery.min', 'jquery-ui', 'global', global.settings.theme + '/theme', 'settings', 'player', 'ui', 'shortcuts', '/socket.io/socket.io.js', 'app'];
+        }
+
+        app.set('views', "" + __dirname + "/views/" + theme);
         res.render('global', {
             cssArray: cssArray,
             jsArray: jsArray,
             theme: global.settings.theme,
+            lang: global.settings.locale,
             appDebug: global.settings.debug,
             locale: JSON.stringify(i18n.getCatalog()[global.settings.locale])
         });
@@ -118,7 +147,7 @@ function configSocket()
                 exec("python3 scripts/scan.py '" + path + "' config/config.json", function(error, stdout, stderr) {
                     if (global.settings.debug)
                         console.log('Library updated');
-                    db.deleteUnusedGenre(function(){
+                    db.deleteUnusedGenre(function() {
                         if (global.settings.debug)
                             console.log('Delete unused genres');
                         if (deleteOldFiles)
@@ -152,6 +181,7 @@ function configApp(readSettings)
     global.settings.debug = (global.settings.debug == 1) ? true : false;
     global.settings.locale = config.locale;
     global.settings.theme = config.theme;
+    global.settings.mobileTheme = config.mobileTheme;
 
     i18n.configure({
         locales: [global.settings.locale],

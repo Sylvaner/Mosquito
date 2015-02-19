@@ -83,8 +83,8 @@ class TestScriptScan(unittest.TestCase):
 
 	def test_read_file_data(self):
 		data = scan.read_file_data(db, os.path.abspath("test/data/Jazz/1500.mp3"), "mp3")
-		self.assertEqual("'Jazzy'", data["artist"])
-		self.assertEqual("'1500'", data["title"])
+		self.assertEqual("Jazzy", data["artist"])
+		self.assertEqual("1500", data["title"])
 		self.assertNotEqual("NULL", data['genre'])
 		data = scan.read_file_data(db, os.path.abspath("test/data/Techno/NotAMusicFile.txt"), "txt")
 		self.assertIsNone(data)
@@ -101,11 +101,16 @@ class TestScriptScan(unittest.TestCase):
 		scan.generate_genre_list(db)
 		self.assertEqual(1, scan.get_genre_id(db, "Unknow"))
 		self.assertEqual(2, scan.get_genre_id(db, "Zeuhl"))
+		self.assertEqual(3, scan.get_genre_id(db, "Genre'with'quote'"))
+		self.assertEqual(3, scan.get_genre_id(db, "Genre'with'quote'"))
 		
 	def test_file_exists_in_database(self):
 		data = scan.read_file_data(db, os.path.abspath("test/data/Jazz/1500.mp3"), "mp3")
 		self.assertFalse(scan.file_exists_in_database(db, data['path']))
 		scan.add_file(db, data, "ScanCodeTest")
+		self.assertTrue(scan.file_exists_in_database(db, data['path']))
+		data = scan.read_file_data(db, os.path.abspath("test/data/Test/1'Quote'song'.mp3"), "mp3")
+		scan.add_file(db, data, "ScanCodeTest1")
 		self.assertTrue(scan.file_exists_in_database(db, data['path']))
 		
 	def test_add_file(self):
@@ -116,6 +121,12 @@ class TestScriptScan(unittest.TestCase):
 		scan.add_file(db, data, "ScanCodeTest")
 		cursor.execute("SELECT * FROM audio_file")
 		self.assertEqual(1, cursor.rowcount)
+		data = scan.read_file_data(db, os.path.abspath("test/data/Test/1'Quote'song'.mp3"), "mp3")
+		scan.add_file(db, data, "ScanCodeTest1")
+		data = scan.read_file_data(db, os.path.abspath("test/data/Test/1'Quote'song'.mp3"), "mp3")
+		scan.add_file(db, data, "ScanCodeTest1")
+		cursor.execute("SELECT * FROM audio_file")
+		self.assertEqual(2, cursor.rowcount)
 		cursor.close()
 		
 	def test_read_config_file(self):

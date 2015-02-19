@@ -1,0 +1,34 @@
+doctype html
+html(lang=lang)
+ head
+   title Mosquito Media Player
+   meta(name='viewport', content='width=device-width, initial-scale=1')
+   meta(charset='utf8')
+   for cssFile in cssArray
+     link(rel='stylesheet', href='css/'+cssFile+'.css', type='text/css')
+ body
+  div(class='disableTextSelect')#global
+    div#menu
+     div#back-button
+      img(src='/images/default/back.png')
+     h1#title Mosquito
+    div#content
+     ul#content-list
+    div#player
+     audio#audio
+     div#player-command
+      div#previous-button
+       img(src='/images/default/previous.png')
+      div#play-button
+       img(src='/images/default/play.png')
+      div#next-button
+       img(src='/images/default/next.png')
+  script(type='text/javascript').
+   var theme = '#{theme}';
+   var appDebug = #{appDebug};
+   var locale = !{locale};
+  for jsFile in jsArray
+   if jsFile[0] == '/'
+    script(type='text/javascript', src=jsFile)
+   else
+    script(type='text/javascript', src='js/'+jsFile+'.js')

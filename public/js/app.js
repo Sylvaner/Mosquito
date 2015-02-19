@@ -50,47 +50,5 @@ $(document).ready(function() {
     shortcuts.init($(document));
 });
 
-/**
- * Function: ajaxQuery
- *
- * Launch a query to the server.
- *
- * Parameters:
- *  ajaxData - Data to send.
- *  successCallback - Function called on success.
- */
-ajaxQuery = function(ajaxData, successCallback) {
-    var proxyCallback = successCallback;
-    if (appDebug)
-    {
-        proxyCallback = function(data) {
-            console.log('Ajax query');
-            console.log('Send : ');
-            console.log(ajaxData);
-            console.log('Receive : ');
-            console.log(data);
-            if (successCallback != null)
-                successCallback(data);
-        };
-    }
-    $.ajax({
-        url: "ajax",
-        type: "POST",
-        data: JSON.stringify(ajaxData),
-        dataType: "json",
-        cache: false,
-        timeout: 5000,
-        contentType: "application/json",
-        success: proxyCallback,
-        error: function(xhr, ajaxOptions, thrownError) {
-            console.log(ajaxData);
-            console.log(xhr.status);
-            console.log(xhr.resoponseText);
-            console.log(xhr.error);
-            console.log(ajaxOptions);
-            console.log(thrownError);
-        }
-    });
-};
 
 
