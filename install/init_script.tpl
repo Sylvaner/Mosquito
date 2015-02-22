@@ -16,7 +16,7 @@ LOG="/var/log/mosquito"
 
 do_start() {
 	if [ ! -f $LOCK ]; then
-		$$$$$$$$$$ $SERVER_DIR/app.js >> $LOG &
+		$$$$$$$$$$ $SERVER_DIR/app.js >> $LOG 2>&1 &
 		PID=$!
 		if [ $PID ]; then
 			echo $PID > $LOCK

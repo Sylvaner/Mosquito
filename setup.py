@@ -143,7 +143,7 @@ def install_missing_packages():
 def install_boot():
 	try:
 		if os.path.exists('/etc/init.d/mosquito'):
-			os.system('/etc/init.d/mosquito stop') 
+			os.system('/etc/init.d/mosquito stop > /dev/null 2>&1') 
 			os.system('rm -fr /etc/init.d/mosquito')
 		# Copy file from template
 		init_template = open('install/init_script.tpl')
